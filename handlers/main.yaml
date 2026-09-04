@@ -1,0 +1,8 @@
+---
+
+- name: LLAMASWAP restart
+  ansible.builtin.systemd_service:
+    name: llama-swap.service
+    state: restarted
+    daemon_reload: true
+  become: true

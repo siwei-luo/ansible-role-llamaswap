@@ -1,0 +1,17 @@
+#jinja2: keep_trailing_newline: True
+[Unit]
+Description=Model swapping for llama.cpp (or any local OpenAPI compatible server)
+
+[Service]
+DynamicUser=yes
+StateDirectory=llama-swap
+WorkingDirectory=/var/lib/llama-swap
+Environment=HOME=/var/lib/llama-swap
+Restart=on-failure
+RestartSec=3
+StartLimitBurst=3
+StartLimitInterval=30
+ExecStart=/usr/local/bin/llama-swap -config /etc/llama-swap/config.yaml -watch-config -listen {{ llamaswap_listen }}
+
+[Install]
+WantedBy=multi-user.target

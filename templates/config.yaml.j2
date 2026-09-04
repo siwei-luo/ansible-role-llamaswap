@@ -1,0 +1,43 @@
+#jinja2: keep_trailing_newline: True
+globalTTL: {{ llamaswap_globalttl }}
+models:
+{% for model in llamaswap_models %}
+  {{ model.id | lower }}:
+    name: {{ model.name }}
+    cmd: |
+      llama-server
+      --batch-size {{ model.batch_size | default(2048) }}
+      --cache-type-k {{ model.cache_type_k | default('q8_0') }}
+      --cache-type-v {{ model.cache_type_v | default('q8_0') }}
+      --cors-origins {{ model.cors_origins | default('localhost') }}
+      --ctx-size {{ model.context_size }}
+{% if model.device is defined %}
+      --device {{ model.device }}
+{% endif %}
+      --flash-attn {{ model.flash_attn | default('on') }}
+      --jinja
+      --min-p {{ model.min_p }}
+      --model {{ model.model }}
+      --n-gpu-layers {{ model.gpu_layers | default(99) }}
+      --parallel {{ modell.parallel | default(1) }}
+      --presence-penalty {{ model.presence_penalty }}
+      --port ${PORT}
+      --repeat-penalty {{ model.repeat_penalty }}
+{% if model.draft_model is defined %}
+      --spec-draft-model {{ model.draft_model }}
+{% endif %}
+{% if model.draft_n_max is defined %}
+      --spec-draft-n-max {{ model.draft_n_max }}
+      --spec-type draft-mtp
+{% endif %}
+      --temp {{ model.temperature }}
+      --top-p {{ model.top_p }}
+      --top-k {{ model.top_k }}
+      --ubatch-size {{ model.ubatch_size | default(512) }}
+{% if model.env is defined %}
+    env:
+{% for env in model.env %}
+      - "{{ env }}"
+{% endfor %}
+{% endif %}
+{% endfor %}

@@ -1,0 +1,55 @@
+---
+
+- name: LLAMASWAP
+  become: true
+  tags:
+    - llamaswap
+    - llm
+  when: llamaswap_active
+  block:
+
+    - name: LLAMASWAP check llama-swap
+      ansible.builtin.command:
+        cmd: llama-swap --version
+      changed_when: false
+      ignore_errors: true
+      register: _llamaswap_status
+
+    - name: LLAMASWAP install llama-swap
+      ansible.builtin.unarchive:
+        src: "https://github.com/mostlygeek/llama-swap/releases/download/v{{ llamaswap_version }}/llama-swap_{{ llamaswap_version }}_linux_amd64.tar.gz"
+        dest: /usr/local/bin
+        remote_src: true
+        include:
+          - llama-swap
+        owner: root
+        group: root
+        mode: "0755"
+      notify: LLAMASWAP restart
+      when: (_llamaswap_status.rc != 0) or
+            (llamaswap_version not in _llamaswap_status.stdout)
+
+    - name: LLAMASWAP configure `/etc/llama-swap`
+      ansible.builtin.file:
+        path: /etc/llama-swap
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: LLAMASWAP configure `/etc/llama-swap/config.yaml`
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/config.yaml.j2"
+        dest: /etc/llama-swap/config.yaml
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: LLAMASWAP configure `/etc/systemd/system/llama-swap.service`
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/llama-swap.service.j2"
+        dest: /etc/systemd/system/llama-swap.service
+        owner: root
+        group: root
+        mode: "0644"
+      notify: LLAMASWAP restart
