@@ -5,7 +5,7 @@ models:
   {{ model.id | lower }}:
     name: {{ model.name }}
     cmd: |
-      llama-server
+      {{ model.server | default('llama-server') }}
       --batch-size {{ model.batch_size | default(2048) }}
       --cache-type-k {{ model.cache_type_k | default('q8_0') }}
       --cache-type-v {{ model.cache_type_v | default('q8_0') }}
