@@ -28,7 +28,7 @@ models:
 {% endif %}
 {% if model.draft_n_max is defined %}
       --spec-draft-n-max {{ model.draft_n_max }}
-      --spec-type draft-mtp
+      --spec-type {{ model.draft_type | default('draft-mtp') }}
 {% endif %}
       --temp {{ model.temperature }}
       --top-p {{ model.top_p }}
