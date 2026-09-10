@@ -71,3 +71,11 @@
         group: root
         mode: "0644"
       notify: LLAMASWAP restart
+
+    - name: LLAMASWAP enable service
+      ansible.builtin.systemd_service:
+        name: llama-swap.service
+        state: started
+        enabled: true
+        daemon_reload: true
+
