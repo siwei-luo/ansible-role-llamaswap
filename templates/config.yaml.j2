@@ -17,6 +17,9 @@ models:
       --flash-attn {{ model.flash_attn | default('on') }}
       --jinja
       --min-p {{ model.min_p }}
+{% if model.mmproj is defined %}
+      --mmproj {{ model.mmproj }}
+{% endif %}
       --model {{ model.model }}
       --n-gpu-layers {{ model.gpu_layers | default(99) }}
       --parallel {{ modell.parallel | default(1) }}
