@@ -18,16 +18,16 @@ models:
       --jinja
       --min-p {{ model.min_p }}
 {% if model.mmproj is defined %}
-      --mmproj {{ model.mmproj }}
+      --mmproj {% if model.directory is defined %}{{ model.directory }}/{% endif %}{{ model.mmproj }}
 {% endif %}
-      --model {{ model.model }}
+      --model {% if model.directory is defined %}{{ model.directory }}/{% endif %}{{ model.model }}
       --n-gpu-layers {{ model.gpu_layers | default(99) }}
       --parallel {{ modell.parallel | default(1) }}
       --presence-penalty {{ model.presence_penalty }}
       --port ${PORT}
       --repeat-penalty {{ model.repeat_penalty }}
 {% if model.draft_model is defined %}
-      --spec-draft-model {{ model.draft_model }}
+      --spec-draft-model {% if model.directory is defined %}{{ model.directory }}/{% endif %}{{ model.draft_model }}
 {% endif %}
 {% if model.draft_n_max is defined %}
       --spec-draft-n-max {{ model.draft_n_max }}
