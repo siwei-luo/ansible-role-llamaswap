@@ -25,6 +25,9 @@ models:
       --parallel {{ modell.parallel | default(1) }}
       --presence-penalty {{ model.presence_penalty }}
       --port ${PORT}
+{% if model.reasoning_effort is defined %}
+      --reasoning-effort {{ model.reasoning_effort }}
+{% endif %}
       --repeat-penalty {{ model.repeat_penalty }}
 {% if model.draft_model is defined %}
       --spec-draft-model {% if model.directory is defined %}{{ model.directory }}/{% endif %}{{ model.draft_model }}
