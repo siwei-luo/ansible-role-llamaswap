@@ -8,6 +8,11 @@
   when: llamaswap_active
   block:
 
+    - name: LLAMASWAP install utils
+      ansible.builtin.pacman:
+        name: lact
+        state: present
+
     - name: LLAMASWAP check llama-swap
       ansible.builtin.command:
         cmd: llama-swap --version
@@ -15,9 +20,17 @@
       ignore_errors: true
       register: _llamaswap_status
 
+    - name: LLAMASWAP download llama-swap
+      ansible.builtin.get_url:
+        url: "https://github.com/mostlygeek/llama-swap/releases/download/v{{ llamaswap_version }}/llama-swap_{{ llamaswap_version }}_linux_amd64.tar.gz"
+        dest: /tmp/llama-swap_linux_amd64.tar.gz
+        checksum: "{{ llamaswap_checksum }}"
+      when: (_llamaswap_status.rc != 0) or
+            (llamaswap_version not in _llamaswap_status.stdout)
+
     - name: LLAMASWAP install llama-swap
       ansible.builtin.unarchive:
-        src: "https://github.com/mostlygeek/llama-swap/releases/download/v{{ llamaswap_version }}/llama-swap_{{ llamaswap_version }}_linux_amd64.tar.gz"
+        src: /tmp/llama-swap_linux_amd64.tar.gz
         dest: /usr/local/bin
         remote_src: true
         include:
@@ -26,24 +39,6 @@
         group: root
         mode: "0755"
       notify: LLAMASWAP restart
-      when: (_llamaswap_status.rc != 0) or
-            (llamaswap_version not in _llamaswap_status.stdout)
-
-    - name: LLAMASWAP sha256sum llama-swap
-      ansible.builtin.stat:
-        path: /usr/local/bin/llama-swap
-        checksum_algorithm: sha256
-      register: _llamaswap_binary
-      when: (_llamaswap_status.rc != 0) or
-            (llamaswap_version not in _llamaswap_status.stdout)
-
-    - name: LLAMASWAP verify llama-swap
-      ansible.builtin.assert:
-        that:
-          - _llamaswap_binary.stat.exists
-          - _llamaswap_binary.stat.checksum == llamaswap_checksum_sha256
-        fail_msg: "Checksum mismatch or file does not exist!"
-        success_msg: "SHA256 checksum verified successfully."
       when: (_llamaswap_status.rc != 0) or
             (llamaswap_version not in _llamaswap_status.stdout)
 

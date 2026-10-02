@@ -10,17 +10,29 @@ models:
       --cache-type-k {{ model.cache_type_k | default('q8_0') }}
       --cache-type-v {{ model.cache_type_v | default('q8_0') }}
       --cors-origins {{ model.cors_origins | default('localhost') }}
+{% if model.cpu_moe is defined and model.cpu_moe %}
+      --cpu-moe
+{% endif %}
       --ctx-size {{ model.context_size }}
 {% if model.device is defined %}
       --device {{ model.device }}
 {% endif %}
       --flash-attn {{ model.flash_attn | default('on') }}
       --jinja
+{% if model.lazy_mode is defined %}
+      --lazy-mode {{ model.lazy_mode }}
+{% endif %}
+{% if model.load_mode is defined %}
+      --load-mode {{ model.load_mode }}
+{% endif %}
       --min-p {{ model.min_p }}
 {% if model.mmproj is defined %}
       --mmproj {% if model.directory is defined %}{{ model.directory }}/{% endif %}{{ model.mmproj }}
 {% endif %}
       --model {% if model.directory is defined %}{{ model.directory }}/{% endif %}{{ model.model }}
+{% if model.cpu_moe_layers is defined %}
+      --n-cpu-moe {{ model.cpu_moe_layers }}
+{% endif %}
       --n-gpu-layers {{ model.gpu_layers | default(99) }}
       --parallel {{ modell.parallel | default(1) }}
       --presence-penalty {{ model.presence_penalty }}
@@ -37,6 +49,9 @@ models:
       --spec-type {{ model.draft_type | default('draft-mtp') }}
 {% endif %}
       --temp {{ model.temperature }}
+{% if model.threads is defined %}
+      --threads {{ model.threads }}
+{% endif %}
       --top-p {{ model.top_p }}
       --top-k {{ model.top_k }}
       --ubatch-size {{ model.ubatch_size | default(512) }}
