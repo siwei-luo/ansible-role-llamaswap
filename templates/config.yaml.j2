@@ -33,7 +33,7 @@ models:
 {% if model.cpu_moe_layers is defined %}
       --n-cpu-moe {{ model.cpu_moe_layers }}
 {% endif %}
-      --n-gpu-layers {{ model.gpu_layers | default(99) }}
+      --n-gpu-layers {{ model.gpu_layers | default("all") }}
       --parallel {{ modell.parallel | default(1) }}
       --presence-penalty {{ model.presence_penalty }}
       --port ${PORT}
@@ -43,6 +43,9 @@ models:
       --repeat-penalty {{ model.repeat_penalty }}
 {% if model.draft_model is defined %}
       --spec-draft-model {% if model.directory is defined %}{{ model.directory }}/{% endif %}{{ model.draft_model }}
+{% endif %}
+{% if model.draft_n_gpu_layers is defined %}
+      --spec-draft-ngl {{ model.draft_n_gpu_layers }}
 {% endif %}
 {% if model.draft_n_max is defined %}
       --spec-draft-n-max {{ model.draft_n_max }}
