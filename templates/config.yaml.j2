@@ -33,7 +33,7 @@ models:
 {% if model.cpu_moe_layers is defined %}
       --n-cpu-moe {{ model.cpu_moe_layers }}
 {% endif %}
-      --n-gpu-layers {{ model.gpu_layers | default("all") }}
+      --n-gpu-layers {{ model.gpu_layers | default('all') }}
       --parallel {{ modell.parallel | default(1) }}
       --presence-penalty {{ model.presence_penalty }}
       --port ${PORT}
