@@ -2,8 +2,8 @@
 
 llamaswap_active: true
 
-llamaswap_version: "270"
-llamaswap_checksum: sha256:b7f89c944e83e30c438846f8c513b9e64fb7bdcec1e3f47ed8be31a94d688a09
+llamaswap_version: "272"
+llamaswap_checksum: sha256:3f21b4c13f55ea5576badcd6cc1d114ccdcf74a5d56346d3ac1e777d28e0fdf1
 llamaswap_models: []
 llamaswap_globalttl: 3600
 llamaswap_listen: 127.0.0.1:11434
