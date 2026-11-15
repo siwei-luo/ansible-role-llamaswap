@@ -9,6 +9,9 @@ models:
       --batch-size {{ model.batch_size | default(2048) }}
       --cache-type-k {{ model.cache_type_k | default('q8_0') }}
       --cache-type-v {{ model.cache_type_v | default('q8_0') }}
+{% if model.chat_template_kwargs is defined %}
+      --chat-template-kwargs '{{ model.chat_template_kwargs }}''
+{% endif %}
       --cors-origins {{ model.cors_origins | default('localhost') }}
 {% if model.cpu_moe is defined and model.cpu_moe %}
       --cpu-moe
